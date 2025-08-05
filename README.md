@@ -187,30 +187,6 @@ python main.py --data-path /path/to/nuscenes --plot-type rcs_cluster
 - `--consecutive-frames`: Range of frame requirements (default: 1-30)
 - `--version`: NuScenes dataset version (default: v1.0-mini)
 
-### Core Modules
-
-#### `precisionSimga5.py` - Precision Analysis
-*Implements precision evaluation and visualization functions.*
-
-**Key Functions:**
-- `precisionSimga5()`: Main evaluation function
-  - Processes all scenes with specified consecutive frame requirements
-  - Calculates accuracy and standard deviation for each frame requirement
-  - Generates accuracy vs frequency plot
-  - Returns comprehensive results dictionary
-
-- `plot_num_cluster()`: Analyzes total cluster counts
-  - Creates bar chart of cluster counts vs frame requirements
-  - Shows relationship between frame persistence and cluster detection
-
-- `plot_mov_stationary_cluster()`: Movement pattern analysis
-  - Categorizes clusters by movement behavior
-  - Tracks precision scores for different motion types
-  - Generates movement pattern distribution plots
-
-**Movement Categories:**
-- Moving, Stationary, Oncoming, Cross-moving, Cross-stationary, Stopped, Unknown
-
 ---
 
 ## Output Structure
