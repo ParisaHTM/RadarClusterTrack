@@ -336,7 +336,7 @@ Make sure to run scripts in the correct order:
 ## Contact
 For questions, issues, or contributions:
 - Create an issue on GitHub
-- Contact: qxu699@mocs.utc.edu / parisahatami001@gmail.com
+- Contact: qxy699@mocs.utc.edu / parisahatami001@gmail.com
 ---
 
 *Last updated: Aug 2025*
