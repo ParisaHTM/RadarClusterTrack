@@ -4,6 +4,7 @@ This project provides a comprehensive pipeline for radar point cloud clustering,
 
 ## Table of Contents
 - [Overview](#overview)
+- [Visual Results](#visual-results)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [1. Clustering and Tracking (clusterTrack)](#1-clustering-and-tracking-clustertrack)
@@ -338,4 +339,4 @@ For questions, issues, or contributions:
 - Contact: qxu699@mocs.utc.edu / parisahatami001@gmail.com
 ---
 
-*Last updated: 2024*
+*Last updated: Aug 2025*
