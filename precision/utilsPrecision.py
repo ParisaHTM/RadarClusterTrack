@@ -7,8 +7,11 @@ from typing import Dict, List
 import seaborn as sns
 import numpy as np
 from statistics import stdev
+import argparse
 
-def load_clustering_data(scene_name, data_dir='./clustering_data_pkl_rcs', verbose=False):
+METHOD = 'cca'
+
+def load_clustering_data(scene_name, data_dir=f'../clusterTrack/clustering_data_pkl_rcs_all_review_pdh0', verbose=False):
     """
     Load clustering data for a specific scene from pickle file
     
@@ -143,7 +146,7 @@ def calculate_coefficient(consecutive_frames, assigned_consecutive_frames):
         ratio = consecutive_frames / assigned_consecutive_frames
         return ratio
 
-def compute_scene_accuracy(scene_name, assigned_consecutive_frames, sigma, data_dir='.\clustering_data_pkl_rcs', verbose=False):
+def compute_scene_accuracy(scene_name, assigned_consecutive_frames, sigma, data_dir=f'../clusterTrack/clustering_data_pkl_rcs_all_review_pdh0', verbose=False):
     """
     Compute accuracy metric for a scene based on cluster consistency across consecutive frames
     
@@ -229,14 +232,17 @@ def compute_scene_accuracy(scene_name, assigned_consecutive_frames, sigma, data_
     
     return results
 
-def plot_accuracy(F_values: List[int], accuracies: List[float], stds: List[float], output: str = "accuracy_vs_Freq.png") -> None:
+def plot_accuracy(F_values: List[int], accuracies: List[float], stds: List[float], output: str = "accuracy_vs_Freq_{METHOD}.png") -> None:
     plt.figure(figsize=(10, 6))
+    plt.grid(True, linestyle="--", linewidth=0.7, alpha=0.5)
     line = sns.lineplot(x=F_values, y=accuracies, marker="o", linewidth=2, color="#2ca02c", label="MATC-APrecision")
     plt.fill_between(F_values, np.array(accuracies) - np.array(stds), np.array(accuracies) + np.array(stds),
                      color="#2ca02c", alpha=0.2, label="±1 std dev")
-    line.set_xlabel("Required consecutive frames (F_req)")
-    line.set_ylabel("MATC-Precision")
-    line.set_title("Tracking accuracy vs. consecutive-frame requirement")
+    line.set_xlabel("Required consecutive frames $(F_{req})$", fontsize=14)
+    line.set_ylabel("MATC-Precision (mean across scenes)", fontsize=14)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    # line.set_title("Tracking accuracy vs. consecutive-frame requirement")
     plt.legend()
     plt.tight_layout()
     plt.savefig(output, dpi=300)
@@ -303,7 +309,7 @@ def plot_summary_precision_sigma(sigma_values, consecutive_frames, nusc):
     plt.grid(True, linestyle='--', alpha=0.6)
     plt.legend(title='RCS Sigma (σ)', fontsize=10)
     plt.tight_layout()
-    plt.savefig('./accuracy_vs_Freq_rcs_dyna_multi_sigma.png', dpi=300)
+    plt.savefig(f'./accuracy_vs_Freq_rcs_dyna_multi_sigma_{METHOD}.png', dpi=300)
     plt.show()
 
     print("\n" + "="*60)
