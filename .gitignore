@@ -14,3 +14,4 @@
 *.ogg
 *.pkl
 __pycache__/
+*.pyc
