@@ -14,10 +14,10 @@ from typing import Dict, List
 from clusterTracker import ClusterTracker
 from radarPointCloud import RadarPointCloudWithRcsDistance
 from radarUtils import get_radar_points_within_lidar_radius, extract_radar_features
-from clustering import find_similar_velocities_and_positions_custom
-from visCamMap.config import (
+from clustering import find_similar_velocities_and_positions_custom, dbscan_velocity_position
+from config import (
     CAMS, RADARS_FOR_CAMERA, 
-    RADAR_PROCESSING_PARAMS, CLUSTERING_PARAMS, 
+    RADAR_PROCESSING_PARAMS, CLUSTERING_PARAMS, DBSCAN_PARAMS,
     DEFAULT_PATHS, NUSCENES_CONFIG, PROCESSING_FLAGS, TRACKING_PARAMS
 )
 
@@ -174,6 +174,27 @@ class RadarDataProcessor:
         
         features = extract_radar_features(filtered_radar_points)
         
+        method = CLUSTERING_PARAMS.get('method', 'cca')
+        if method == 'cca':
+            clusters, cluster_medians_rcs, cluster_median_weighted_rcs, cluster_medians_normalized_rcs = \
+                find_similar_velocities_and_positions_custom(
+                    features['v'], features['x'], features['y'], 
+                    features['rcs'], features.get('weighted_rcs', features['rcs']), 
+                    features['normalized_rcs'],
+                    v_threshold=CLUSTERING_PARAMS['velocity_threshold'],
+                    pos_threshold=CLUSTERING_PARAMS['position_threshold']
+                )
+        elif method == 'dbscan':
+            clusters, cluster_medians_rcs, cluster_median_weighted_rcs, cluster_medians_normalized_rcs = \
+                dbscan_velocity_position(
+                    features['v'], features['x'], features['y'], 
+                    features['rcs'], features.get('weighted_rcs', features['rcs']), 
+                    features['normalized_rcs'],
+                    eps_pos=float(DBSCAN_PARAMS.get('eps_pos', 2.0)),
+                    eps_v=float(DBSCAN_PARAMS.get('eps_v', 0.5)),
+                    min_samples=int(DBSCAN_PARAMS.get('min_samples', 3)),
+                )
+
         clusters, cluster_medians_rcs, cluster_median_weighted_rcs, cluster_medians_normalized_rcs = \
             find_similar_velocities_and_positions_custom(
                 features['v'], features['x'], features['y'], 

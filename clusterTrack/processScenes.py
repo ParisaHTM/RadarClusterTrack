@@ -4,12 +4,13 @@ Process scenes in the NuScenes dataset.
 
 import sys
 import argparse
+from config import DEFAULT_PATHS
 from dataProcessor import RadarDataProcessor
 
 
 def main():
     parser = argparse.ArgumentParser(description='Process NuScenes radar data for all scenes')
-    parser.add_argument('--data-path', type=str, 
+    parser.add_argument('--data-path', type=str, default=DEFAULT_PATHS['nuscenes_dataroot'], 
                        help='Path to NuScenes dataset')
     parser.add_argument('--start', type=int, default=0,
                        help='Starting scene index (default: 0)')
@@ -17,7 +18,7 @@ def main():
                        help='Ending scene index (default: None for all remaining)')
     parser.add_argument('--scene-name', type=str, default=None,
                         help="Process a single scene by name")
-    parser.add_argument('--output-dir', type=str,
+    parser.add_argument('--output-dir', type=str, default=DEFAULT_PATHS['pickle_save_root'],
                        help='Output directory for results (optional)')
     
     args = parser.parse_args()

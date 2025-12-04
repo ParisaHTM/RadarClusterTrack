@@ -10,6 +10,7 @@ from scipy.spatial.distance import pdist, squareform
 from scipy.sparse import csr_matrix
 import numpy as np
 from collections import Counter
+from sklearn.cluster import DBSCAN
 
 
 def find_similar_velocities_and_positions_custom(v, x, y, rcs, weighted_rcs, normalized_rcs, 
@@ -78,6 +79,60 @@ def find_similar_velocities_and_positions_custom(v, x, y, rcs, weighted_rcs, nor
         cluster_medians_normalized_rcs.append(median_value)
     
     return similar_groups, cluster_medians_rcs, cluster_median_weighted_rcs, cluster_medians_normalized_rcs
+
+
+def dbscan_velocity_position(
+    v: np.ndarray,
+    x: np.ndarray,
+    y: np.ndarray,
+    rcs: np.ndarray,
+    weighted_rcs: np.ndarray,
+    normalized_rcs: np.ndarray,
+    eps_pos: float = 2.0,
+    eps_v: float = 0.5,
+    min_samples: int = 3,
+):
+    """
+    Cluster points using DBSCAN over a scaled (x, y, v) space.
+    
+    We scale features so that DBSCAN with eps=1.0 corresponds to the given thresholds:
+      X' = [x/eps_pos, y/eps_pos, v/eps_v]
+    Then we run DBSCAN(eps=1.0, min_samples=min_samples).
+    
+    Returns:
+        - clusters: list of point index arrays for each DBSCAN cluster (label >= 0)
+        - cluster_medians_rcs
+        - cluster_median_weighted_rcs
+        - cluster_medians_normalized_rcs
+    """
+    if v.size == 0:
+        return [], [], [], []
+
+    X_scaled = np.column_stack([x / float(eps_pos), y / float(eps_pos), v / float(eps_v)])
+
+    db = DBSCAN(eps=1.0, min_samples=int(min_samples))
+    labels = db.fit_predict(X_scaled)
+
+    clusters: List[np.ndarray] = []
+    unique_labels = sorted([int(l) for l in np.unique(labels) if int(l) >= 0])
+    for lbl in unique_labels:
+        idx = np.where(labels == lbl)[0]
+        if idx.size >= int(min_samples):
+            clusters.append(idx)
+
+    cluster_medians_rcs: List[float] = []
+    for cluster in clusters:
+        cluster_medians_rcs.append(float(np.median(rcs[cluster])))
+
+    cluster_median_weighted_rcs: List[float] = []
+    for cluster in clusters:
+        cluster_median_weighted_rcs.append(float(np.median(weighted_rcs[cluster])))
+
+    cluster_medians_normalized_rcs: List[float] = []
+    for cluster in clusters:
+        cluster_medians_normalized_rcs.append(float(np.median(normalized_rcs[cluster])))
+
+    return clusters, cluster_medians_rcs, cluster_median_weighted_rcs, cluster_medians_normalized_rcs
 
 
 def compute_cluster_features(cluster_indices, radar_points):

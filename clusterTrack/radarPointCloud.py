@@ -16,7 +16,7 @@ from typing import Dict, Tuple, List
 import os.path as osp
 import numpy as np
 from pyquaternion import Quaternion
-from visCamMap.config import RADAR_PROCESSING_PARAMS, RADARS_ID
+from config import RADAR_PROCESSING_PARAMS, RADARS_ID
 
 
 def transform_rcs(points, threshold=4):

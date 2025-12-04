@@ -9,7 +9,7 @@ import numpy as np
 from nuscenes.utils.geometry_utils import transform_matrix
 from pyquaternion import Quaternion
 from typing import Tuple
-from visCamMap.config import FILTERING_PARAMS
+from config import FILTERING_PARAMS
 
 
 def get_radar_points_within_lidar_radius(all_radar_pcs, nusc, sample, radius=FILTERING_PARAMS['lidar_radius']):
