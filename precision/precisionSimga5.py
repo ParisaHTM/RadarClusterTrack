@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 from collections import Counter
 from collections import defaultdict
 import numpy as np
+import argparse
+
+METHOD = 'cca'
 
 def precisionSimga5(nusc, consecutive_frames = range(1, 30), sigma=5):
     total_accuracy_list = []
@@ -27,7 +30,7 @@ def precisionSimga5(nusc, consecutive_frames = range(1, 30), sigma=5):
         print(f"F_req={cf:2d} → acc={total_accuracy:.4f}, std={stds[-1]:.4f}")
 
 
-    plot_accuracy(consecutive_frames, total_accuracy_list, stds, output='./accuracy_vs_Freq_rcs_dyna.png')
+    plot_accuracy(consecutive_frames, total_accuracy_list, stds, output=f'./accuracy_vs_Freq_rcs_dyna_{METHOD}_pdh0.png')
     print("The plot is saved in the current directory")
     return all_results
 
@@ -69,7 +72,7 @@ def plot_num_cluster(all_results):
     plt.yticks(fontsize=24)
     plt.grid(axis='y', linestyle='--', alpha=0.3)
     plt.tight_layout()
-    plt.savefig('num_cluster.png')
+    plt.savefig(f'num_cluster_{METHOD}_pdh0.png')
     print("The plot is saved in the current directory")
     plt.show()
     return total_clusters_list, cf_indices
@@ -160,7 +163,7 @@ def plot_mov_stationary_cluster(all_results):
     plt.legend(title='Motion Type', loc='upper right', fontsize=22, title_fontsize=22, frameon=True)
     plt.grid(axis='y', linestyle='--', alpha=0.3)
     plt.tight_layout()
-    plt.savefig('mov_stationary_cluster.png')
+    plt.savefig(f'mov_stationary_cluster_{METHOD}_pdh0.png')
     print("The plot is saved in the current directory")
     plt.show()
     return motion_categories, cf_indices
@@ -189,9 +192,11 @@ def plot_percentage_mov_status_cluster(motion_categories, total_clusters_list, c
     plt.yticks(fontsize=20)
     plt.ylim(0, 100)
     # plt.legend(title='Motion Type', bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=12, title_fontsize=13)
+    plt.savefig(f'percentage_mov_status_cluster_{METHOD}_pdh0.png')
     plt.grid(axis='y', linestyle='--', alpha=0.3)
     plt.tight_layout()
     plt.show()
+    print("The plot is saved in the current directory")
 
 def plot_precistion_mov_status_cluster(motion_categories, cf_indices):
 
@@ -242,7 +247,7 @@ def plot_precistion_mov_status_cluster(motion_categories, cf_indices):
     plt.grid(True, linestyle='--', alpha=0.5)
     # plt.legend(title='Motion Type (Mean / Min / Max)', bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=18)
     plt.tight_layout()
-    plt.savefig('precistion_mov_status_cluster.png')
+    plt.savefig(f'precistion_mov_status_cluster_{METHOD}_pdh0.png')
     plt.show()
     print("The plot is saved in the current directory")
 
@@ -302,7 +307,7 @@ def plot_rcs_cluster(all_results, cf_indices):
     plt.legend(title='RCS Range', loc='upper right', fontsize=22, title_fontsize=22, frameon=True)
     plt.grid(axis='y', linestyle='--', alpha=0.3)
     plt.tight_layout()
-    plt.savefig('rcs_cluster.png')
+    plt.savefig(f'rcs_cluster_{METHOD}_pdh0.png')
     plt.show()
     print("The plot is saved in the current directory")
     return rcs_categories, cf_indices
@@ -334,7 +339,7 @@ def plot_percentage_rcs_status_cluster(rcs_categories, total_clusters_list, cf_i
     # plt.legend(title='RCS Range', bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=12, title_fontsize=13)
     plt.grid(axis='y', linestyle='--', alpha=0.3)
     plt.tight_layout()
-    plt.savefig('percentage_rcs_status_cluster.png')
+    plt.savefig(f'percentage_rcs_status_cluster_{METHOD}_pdh0.png')
     plt.show()
     print("The plot is saved in the current directory")
 
@@ -375,6 +380,6 @@ def plot_precision_rcs_status_cluster(rcs_categories, cf_indices):
     # plt.legend(title='RCS Range (Mean/Min/Max)', bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
-    plt.savefig('precision_rcs_status_cluster.png')
+    plt.savefig(f'precision_rcs_status_cluster_{METHOD}_pdh0.png')
     plt.show()
     print("The plot is saved in the current directory")
